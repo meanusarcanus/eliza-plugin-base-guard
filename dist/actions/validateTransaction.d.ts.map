@@ -1,0 +1,1 @@
+{"version":3,"file":"validateTransaction.d.ts","sourceRoot":"","sources":["../../src/actions/validateTransaction.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAyE,MAAM,aAAa,CAAC;AAC5G,OAAO,EAAE,eAAe,EAAE,MAAM,cAAc,CAAC;AAE/C,wBAAgB,+BAA+B,CAAC,MAAM,EAAE,eAAe,GAAG,MAAM,CA+D/E"}
