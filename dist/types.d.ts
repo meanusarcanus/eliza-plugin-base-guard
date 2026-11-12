@@ -49,7 +49,8 @@ export interface Action {
     description: string;
     similes?: string[];
     examples?: Array<Array<{
-        user: string;
+        user?: string;
+        name?: string;
         content: {
             text: string;
             [key: string]: unknown;
@@ -62,15 +63,16 @@ export interface Evaluator {
     name: string;
     description: string;
     similes?: string[];
-    examples?: Array<{
-        prompt: string;
-        outcome: string;
-    }>;
-    validate: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<boolean>;
+    schema?: Record<string, unknown>;
+    prompt?: string;
+    shouldRun?: (params: any) => Promise<boolean>;
     handler: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<unknown>;
 }
 export interface Provider {
-    get: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<string | null>;
+    name?: string;
+    get: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<string | {
+        text?: string;
+    } | null>;
 }
 export interface Plugin {
     name: string;
@@ -92,7 +94,7 @@ export interface GuardPolicy {
     blockedDestinations: string[];
     strictMode: boolean;
 }
-export type VerdictCode = "APPROVED" | "PROMPT_INJECTION_DETECTED" | "DESTINATION_BLOCKLISTED" | "INVALID_DESTINATION" | "UNLIMITED_APPROVAL_ATTACK" | "DANGEROUS_CALLDATA" | "EXCEEDS_SPEND_LIMIT" | "X402_EXPIRED" | "X402_EXCEEDS_CAP" | "X402_MALFORMED" | "MALFORMED_VALUE";
+export type VerdictCode = "APPROVED" | "PROMPT_INJECTION_DETECTED" | "DESTINATION_BLOCKLISTED" | "INVALID_DESTINATION" | "UNLIMITED_APPROVAL_ATTACK" | "DANGEROUS_CALLDATA" | "UNRECOGNIZED_CALLDATA" | "EXCEEDS_SPEND_LIMIT" | "X402_EXPIRED" | "X402_EXPIRED_OR_MISSING" | "X402_NONCE_REPLAY" | "X402_EXCEEDS_CAP" | "X402_MALFORMED" | "MALFORMED_VALUE";
 export interface SecurityVerdict {
     allowed: boolean;
     code: VerdictCode;

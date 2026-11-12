@@ -6,16 +6,19 @@ export function createGetPolicyAction(engine) {
         examples: [
             [
                 {
-                    user: "{{user1}}",
+                    name: "{{user1}}",
                     content: { text: "What are your spending limits on Base?" },
                 },
                 {
-                    user: "{{agentName}}",
+                    name: "{{agentName}}",
                     content: { text: "Checking active security policy boundaries...", action: "GET_SECURITY_POLICY" },
                 },
             ],
         ],
-        validate: async (_runtime, _message, _state) => true,
+        validate: async (_runtime, message, _state) => {
+            const text = message.content?.text || "";
+            return /(?:limit|ceiling|spend|policy|security)/i.test(text);
+        },
         handler: async (_runtime, _message, _state, _options, callback) => {
             const policy = engine.getPolicy();
             const text = `Current Onchain Security Policy:\n` +
@@ -26,8 +29,12 @@ export function createGetPolicyAction(engine) {
                 `• Max x402 Payment: ${policy.maxPaymentPerX402} USDC\n` +
                 `• Strict Injection Defense: ${policy.strictMode ? "ENABLED" : "DISABLED"}`;
             if (callback)
-                await callback({ text, policy });
-            return policy;
+                await callback({ text });
+            return {
+                success: true,
+                text,
+                ...policy,
+            };
         },
     };
 }

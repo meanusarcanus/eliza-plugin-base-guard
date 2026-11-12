@@ -52,7 +52,7 @@ export interface Action {
   name: string;
   description: string;
   similes?: string[];
-  examples?: Array<Array<{ user: string; content: { text: string; [key: string]: unknown } }>>;
+  examples?: Array<Array<{ user?: string; name?: string; content: { text: string; [key: string]: unknown } }>>;
   validate: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<boolean>;
   handler: (
     runtime: IAgentRuntime,
@@ -67,13 +67,15 @@ export interface Evaluator {
   name: string;
   description: string;
   similes?: string[];
-  examples?: Array<{ prompt: string; outcome: string }>;
-  validate: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<boolean>;
+  schema?: Record<string, unknown>;
+  prompt?: string;
+  shouldRun?: (params: any) => Promise<boolean>;
   handler: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<unknown>;
 }
 
 export interface Provider {
-  get: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<string | null>;
+  name?: string;
+  get: (runtime: IAgentRuntime, message: Memory, state?: State) => Promise<string | { text?: string } | null>;
 }
 
 export interface Plugin {
@@ -105,8 +107,11 @@ export type VerdictCode =
   | "INVALID_DESTINATION"
   | "UNLIMITED_APPROVAL_ATTACK"
   | "DANGEROUS_CALLDATA"
+  | "UNRECOGNIZED_CALLDATA"
   | "EXCEEDS_SPEND_LIMIT"
   | "X402_EXPIRED"
+  | "X402_EXPIRED_OR_MISSING"
+  | "X402_NONCE_REPLAY"
   | "X402_EXCEEDS_CAP"
   | "X402_MALFORMED"
   | "MALFORMED_VALUE";

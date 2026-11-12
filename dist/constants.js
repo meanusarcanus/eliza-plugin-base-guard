@@ -6,6 +6,11 @@ export const DANGEROUS_SELECTORS = {
     "0x4f1ee3d0": "upgradeToAndCall(address,bytes)",
     "0x3659cfe6": "upgradeTo(address)",
     "0x42966c68": "burn(uint256)",
+    "0xac9650d8": "multicall(bytes[])",
+    "0x5ae401dc": "multicall(uint256,bytes[])",
+    "0x39506948": "increaseAllowance(address,uint256)",
+    "0xd505accf": "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+    "0x83197ef0": "destroy() / selfdestruct",
 };
 export const PROMPT_INJECTION_PATTERNS = [
     { pattern: /ignore\s+(all\s+)?(previous\s+)?instructions/i, name: "Instruction Override" },
